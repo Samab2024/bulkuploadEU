@@ -1,9 +1,9 @@
-import requests, sys, os, json, logging
+import requests, sys, os, json, logging, logger
 import xml.etree.ElementTree as ET
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 
 class veracode_api_call():
-	def __init__(self, endpoint, creds = None, logger = logger.logger(), params = []):
+	def __init__(self, endpoint, creds = None, logger = logger.Logger(), params = []):
 		self.logger = logger
 		
 		try: self.rownum = 'Line #%s' % (params.pop('rownum'))
@@ -52,21 +52,3 @@ class veracode_api_call():
 			self.logger.error( "[{0}]{1}".format(self.rownum, self.response.text) )
 		else:
 			self.logger.info( "[{0}]{1}".format(self.rownum, 'Success')	)
-
-class logger():
-	def __init__(self, filename = 'logs'):
-		import logging, os
-		logging.root.handlers = []
-		logging.getLogger("requests").setLevel(logging.WARNING)
-		logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
-		self.logger = logging.getLogger()
-		self.logger.setLevel(logging.INFO)
-
-		fileHandler = logging.FileHandler("{0}/{1}.log".format(os.getcwd(), 'logs'))
-		fileHandler.setFormatter(logFormatter)
-		self.logger.addHandler(fileHandler)
-
-		consoleHandler = logging.StreamHandler(sys.stdout)
-		consoleHandler.setFormatter(logFormatter)
-		self.logger.addHandler(consoleHandler)
-		return self.logger

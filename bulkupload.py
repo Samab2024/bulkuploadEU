@@ -1,7 +1,7 @@
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 import veracode_api_signing.credentials
 from new_api import veracode_api_call as api_call
-import new_api.logger
+import logger
 from csv_in import csvIn
 import traceback
 
@@ -13,7 +13,7 @@ creds = VeracodeHMAC()
 
 filename = raw_input("CSV File: ")
 myCSV = csvIn.fromFile(filename)
-logger = new_api.logger(filename)
+logger = logger.Logger(filename)
 
 lineinfo = myCSV.next()
 while lineinfo:
