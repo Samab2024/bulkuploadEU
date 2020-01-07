@@ -1,12 +1,11 @@
 import requests, sys, os, json, logging
 import xml.etree.ElementTree as ET
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
-from bs4 import BeautifulSoup
 
 class veracode_api_call():
-	def __init__(self, endpoint, creds = None, params = []):
-		self.turn_on_logging()
-
+	def __init__(self, endpoint, creds = None, logger = logger(), params = []):
+		self.logger = logger
+		
 		try: self.rownum = 'Line #%s' % (params.pop('rownum'))
 		except: self.rownum = 'TEST'
 
@@ -46,7 +45,17 @@ class veracode_api_call():
 		else:
 			return '%s/%s' % ('https://api.veracode.io/elearning/v1/', endpoint), 'json'
 
-	def turn_on_logging(self):
+	def get_response(self): return self.response
+
+	def log_activity(self):
+		if self.response.tag == 'error':
+			self.logger.error( "[{0}]{1}".format(self.rownum, self.response.text) )
+		else:
+			self.logger.info( "[{0}]{1}".format(self.rownum, 'Success')	)
+
+class logger():
+	def __init__(self, filename = 'logs'):
+		import logging, os
 		logging.root.handlers = []
 		logging.getLogger("requests").setLevel(logging.WARNING)
 		logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
@@ -60,12 +69,4 @@ class veracode_api_call():
 		consoleHandler = logging.StreamHandler(sys.stdout)
 		consoleHandler.setFormatter(logFormatter)
 		self.logger.addHandler(consoleHandler)
-	
-	def get_response(self): return self.response
-
-	def log_activity(self):
-		if self.response.tag == 'error':
-			self.logger.error( "[{0}]{1}".format(self.rownum, self.response.text) )
-		else:
-			self.logger.info( "[{0}]{1}".format(self.rownum, 'Success')	)
-
+		return self.logger
