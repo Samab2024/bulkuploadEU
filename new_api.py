@@ -50,6 +50,7 @@ class veracode_api_call():
 		logging.root.handlers = []
 		logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
 		self.logger = logging.getLogger()
+		self.logger.setLevel(logging.INFO)
 
 		fileHandler = logging.FileHandler("{0}/{1}.log".format(os.getcwd(), 'logs'))
 		fileHandler.setFormatter(logFormatter)
