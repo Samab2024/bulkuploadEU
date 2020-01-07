@@ -48,6 +48,7 @@ class veracode_api_call():
 
 	def turn_on_logging(self):
 		logging.root.handlers = []
+		logging.getLogger("requests").setLevel(logging.WARNING)
 		logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s] %(message)s")
 		self.logger = logging.getLogger()
 		self.logger.setLevel(logging.INFO)
