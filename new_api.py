@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 
 class veracode_api_call():
-	def __init__(self, endpoint, creds = None, logger = logger(), params = []):
+	def __init__(self, endpoint, creds = None, logger = logger.logger(), params = []):
 		self.logger = logger
 		
 		try: self.rownum = 'Line #%s' % (params.pop('rownum'))
