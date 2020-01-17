@@ -1,15 +1,17 @@
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
-import veracode_api_signing.credentials
 from new_api import veracode_api_call as api_call
-import logger
 from csv_in import csvIn
-import traceback
+import traceback, logger, ConfigParser, os
 
 # MAIN
 ################################################################################
 api_profile = raw_input("Profile Name: ")
-veracode_api_signing.credentials.PROFILE_DEFAULT = api_profile
-creds = VeracodeHMAC()
+
+config = ConfigParser.ConfigParser()
+config.read( os.path.join('.', 'credentials') )
+api_key_id = config.get(api_profile, 'VERACODE_API_KEY_ID')
+api_key_secret = config.get(api_profile, 'VERACODE_API_KEY_SECRET')
+creds = VeracodeHMAC(api_key_id, api_key_secret)
 
 filename = raw_input("CSV File: ")
 myCSV = csvIn.fromFile(filename)
@@ -22,8 +24,8 @@ while lineinfo:
 			endpoint = lineinfo.pop('apiaction')
 			call = api_call(endpoint=endpoint, creds=creds, logger=logger, params=lineinfo)
 		except Exception as e:
-			print 'Error: %s' % (e)
-			print traceback.print_exc()
+			logger.error(e)
+			logger.error( traceback.print_exc() )
 	lineinfo = myCSV.next()
 
 print '\n=================='
