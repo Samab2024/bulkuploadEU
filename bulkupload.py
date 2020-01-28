@@ -1,33 +1,50 @@
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 from new_api import veracode_api_call as api_call
 from csv_in import csvIn
-import traceback, logger, ConfigParser, os
+import traceback, logger, ConfigParser, os, sys
 
-# MAIN
-################################################################################
-api_profile = raw_input("Profile Name: ")
+def get_creds_profile(api_profile = None):
+	api_profile = api_profile or raw_input("Profile Name: ")
 
-config = ConfigParser.ConfigParser()
-config.read( os.path.join('.', 'credentials') )
-api_key_id = config.get(api_profile, 'VERACODE_API_KEY_ID')
-api_key_secret = config.get(api_profile, 'VERACODE_API_KEY_SECRET')
-creds = VeracodeHMAC(api_key_id, api_key_secret)
+	config = ConfigParser.ConfigParser()
+	config.read( os.path.join('.', 'credentials') )
+	api_key_id = config.get(api_profile, 'VERACODE_API_KEY_ID')
+	api_key_secret = config.get(api_profile, 'VERACODE_API_KEY_SECRET')
+	return VeracodeHMAC(api_key_id, api_key_secret)
 
-filename = raw_input("CSV File: ")
-myCSV = csvIn.fromFile(filename)
-logger = logger.Logger(filename)
+def bulkupload(api_profile = None, filename = None):
+	creds = get_creds_profile(api_profile)
 
-lineinfo = myCSV.next()
-while lineinfo:
-	if 'apiaction' in lineinfo:
-		try:
-			endpoint = lineinfo.pop('apiaction')
-			call = api_call(endpoint=endpoint, creds=creds, logger=logger, params=lineinfo)
-		except Exception as e:
-			logger.error(e)
-			logger.error( traceback.print_exc() )
+	filename = filename or raw_input("CSV File: ")
+	myCSV = csvIn.fromFile(filename)
+	myLogger = logger.Logger(filename)
+	
+	# Credentials Test to check validity; exit script if bad status code
+	try:
+		params = {'rownum': 'CredentialsTest'}
+		call = api_call(endpoint='getmaintenancescheduleinfo', creds=creds, logger=myLogger, params=params )
+		# call.r.raise_for_status()
+	except Exception as e:
+		myLogger.error('Bad response from Credentials test. Exiting...')
+		sys.exit(e)
+
+	# Loop through rows in CSV file
 	lineinfo = myCSV.next()
+	while lineinfo:
+		if 'apiaction' in lineinfo:
+			try:
+				endpoint = lineinfo.pop('apiaction')
+				call = api_call(endpoint=endpoint, creds=creds, logger=myLogger, params=lineinfo)
+			except Exception as e:
+				myLogger.error(e)
+				myLogger.error( traceback.print_exc() )
+		lineinfo = myCSV.next()
 
-print '\n=================='
-print 'FUNCTION COMPLETED'
-print '=================='
+	myLogger.info("CSV completed. Exiting...")
+
+def main(args):
+	bulkupload()
+	return 0
+
+if __name__ == '__main__':
+	sys.exit(main(sys.argv))
