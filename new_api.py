@@ -32,7 +32,8 @@ class veracode_api_call():
 			createuser='3.0', deleteuser='3.0', getuserinfo='3.0', getuserlist='3.0', \
 			updateuser='3.0', createteam='3.0', deleteteam='3.0', getteaminfo='3.0', \
 			getteamlist='3.0', updateteam='3.0', getcurriculumlist='3.0', gettracklist='3.0', \
-			getmaintenancescheduleinfo='3.0', generateflawreport='3.0', downloadflawreport='3.0')
+			getmaintenancescheduleinfo='3.0', generateflawreport='3.0', downloadflawreport='3.0', \
+			deletesandbox='5.0')
 
 		if endpoint in xml_version_numbers:
 			return '%s/%s/%s.do' % ('https://analysiscenter.veracode.com/api', xml_version_numbers[endpoint], endpoint)
