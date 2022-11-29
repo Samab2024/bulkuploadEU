@@ -1,6 +1,6 @@
 import string, csv
 
-charwhitelist = dict(email_address=string.ascii_letters + string.digits + "'-_.@", custom_id = string.ascii_letters + string.digits + "'-_.@", app_id=string.digits, first_name=string.ascii_letters+string.digits+' -_,\'', last_name=string.ascii_letters+string.digits+' -_,\'')
+charwhitelist = dict(email_address=string.ascii_letters + string.digits + "'-_.@", custom_id = string.ascii_letters + string.digits + "'-_.@", app_id=string.digits, first_name=string.ascii_letters+string.digits+' -_,\'', last_name=string.ascii_letters+string.digits+' -_,\'', teams = string.ascii_letters + string.digits + "'-_.@")
 
 class csvIn:
 	def __init__(self, source):
