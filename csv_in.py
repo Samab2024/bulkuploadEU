@@ -41,5 +41,5 @@ class csvIn:
 
 	def inputFilter(self, field, value):
 		if field == 'file': value = '@' + value
-		elif field in charwhitelist: value = filter(lambda x: x in charwhitelist[field], value)
+		# elif field in charwhitelist: value = filter(lambda x: x in charwhitelist[field], value)
 		return value
