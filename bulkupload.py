@@ -31,6 +31,7 @@ def bulkupload(api_profile = None, filename = None):
 	# Loop through rows in CSV file
 	lineinfo = myCSV.next()
 	while lineinfo:
+		myLogger.info(lineinfo)
 		if 'apiaction' in lineinfo:
 			try:
 				endpoint = lineinfo.pop('apiaction')
