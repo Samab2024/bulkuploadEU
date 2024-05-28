@@ -6,12 +6,12 @@ charwhitelist = dict()
 class csvIn:
 	def __init__(self, source):
 		self.READER = csv.reader( source )
-		self.header = self.READER.next()
+		self.header = next(self.READER)
 
 	@classmethod
 	def fromFile(cls, filename = None):
 		if filename == None: filename = raw_input('Location of CSV File: ')
-		return cls( open(filename, "rb") )
+		return cls( open(filename, "rt") )
 
 	@classmethod
 	def fromStream(cls, filename):
@@ -22,7 +22,7 @@ class csvIn:
 
 	def next(self):
 		try:
-			lineinfo = self.pullRow(self.header, self.READER.next())
+			lineinfo = self.pullRow(self.header, next(self.READER))
 		except StopIteration:
 			return False
 		else:

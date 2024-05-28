@@ -56,11 +56,11 @@ class veracode_api_call():
 			self.logger.info( "[{0}]{1}".format(self.rownum, 'Unsure how to process response') )
 
 	def print_response_info(self):
-		print '>>> r.status_code'
-		print self.r.status_code
-		print '>>> r.encoding'
-		print self.r.encoding
-		print ">>> r.headers.get('content-type')"
-		print self.r.headers.get('content-type')
-		print '>>> r.text'
-		print str(self.r.text)
+		print ('>>> r.status_code')
+		print (self.r.status_code)
+		print ('>>> r.encoding')
+		print (self.r.encoding)
+		print (">>> r.headers.get('content-type')")
+		print (self.r.headers.get('content-type'))
+		print ('>>> r.text')
+		print (str(self.r.text))

@@ -1,12 +1,12 @@
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 from new_api import veracode_api_call as api_call
 from csv_in import csvIn
-import traceback, logger, ConfigParser, os, sys
+import traceback, logger, configparser, os, sys
 
 def get_creds_profile(api_profile = None):
-	api_profile = api_profile or raw_input("Profile Name: ")
+	api_profile = api_profile or input("Profile Name: ")
 
-	config = ConfigParser.ConfigParser()
+	config = configparser.ConfigParser(allow_no_value=True)
 	config.read( os.path.join('.', 'credentials') )
 	api_key_id = config.get(api_profile, 'VERACODE_API_KEY_ID')
 	api_key_secret = config.get(api_profile, 'VERACODE_API_KEY_SECRET')
@@ -15,7 +15,7 @@ def get_creds_profile(api_profile = None):
 def bulkupload(api_profile = None, filename = None):
 	creds = get_creds_profile(api_profile)
 
-	filename = filename or raw_input("CSV File: ")
+	filename = filename or input("CSV File: ")
 	myCSV = csvIn.fromFile(filename)
 	myLogger = logger.Logger(filename)
 	
