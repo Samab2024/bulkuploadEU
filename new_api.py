@@ -36,7 +36,7 @@ class veracode_api_call():
 			deletesandbox='5.0')
 
 		if endpoint in xml_version_numbers:
-			return '%s/%s/%s.do' % ('https://analysiscenter.veracode.com/api', xml_version_numbers[endpoint], endpoint)
+			return '%s/%s/%s.do' % ('https://analysiscenter.veracode.eu/api', xml_version_numbers[endpoint], endpoint)
 		else:
 			return '%s/%s' % ('https://api.veracode.io/elearning/v1/', endpoint)
 
