@@ -10,7 +10,7 @@ class csvIn:
 
 	@classmethod
 	def fromFile(cls, filename = None):
-		if filename == None: filename = raw_input('Location of CSV File: ')
+		if filename == None: filename = input('Location of CSV File: ')
 		return cls( open(filename, "rt") )
 
 	@classmethod
