@@ -1,7 +1,9 @@
-FROM python:2.7-windowsservercore
+FROM python:3.12.3-alpine3.20
 
-COPY requirements.txt ./
+WORKDIR /app
+
+COPY requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
-CMD [ "python", "/app/bulkupload.py" ]
+CMD [ "python3", "/app/bulkupload.py" ]

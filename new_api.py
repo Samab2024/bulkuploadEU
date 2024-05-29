@@ -3,13 +3,15 @@ import xml.etree.ElementTree as ET
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC as VeracodeHMAC
 
 class veracode_api_call():
-	def __init__(self, endpoint, creds = None, logger = logger.Logger(), params = []):
+	def __init__(self, region, endpoint, creds = None, logger = logger.Logger(), params = []):
 		self.logger = logger
-		
+
+		self.region = region
+        
 		try: self.rownum = 'Line #%s' % (params.pop('rownum'))
 		except: self.rownum = 'TEST'
 
-		self.url = self.get_url_from_endpoint(endpoint)
+		self.url = self.get_url_from_endpoint(region, endpoint)
 
 		if creds == None:
 			self.auth=VeracodeHMAC(profile = None)
@@ -19,7 +21,7 @@ class veracode_api_call():
 
 		self.log_activity()
 
-	def get_url_from_endpoint(self, endpoint):
+	def get_url_from_endpoint(self, region, endpoint):
 		xml_version_numbers = dict(beginprescan='5.0', beginscan='5.0', createapp='4.0', \
 			createbuild='4.0', deleteapp='5.0', deletebuild='5.0', getappinfo='5.0', \
 			getapplist='5.0', getbuildinfo='5.0', getbuildlist='5.0', getfilelist='5.0', \
@@ -36,7 +38,13 @@ class veracode_api_call():
 			deletesandbox='5.0')
 
 		if endpoint in xml_version_numbers:
-			return '%s/%s/%s.do' % ('https://analysiscenter.veracode.eu/api', xml_version_numbers[endpoint], endpoint)
+            		if region == 'EU':
+                		return '%s/%s/%s.do' % ('https://analysiscenter.veracode.eu/api', xml_version_numbers[endpoint], endpoint)
+            		elif region == 'US':  
+                		return '%s/%s/%s.do' % ('https://analysiscenter.veracode.com/api', xml_version_numbers[endpoint], endpoint)
+            		else:
+                		print("Region not Supported. Please input EU/US")
+                		exit(1)
 		else:
 			return '%s/%s' % ('https://api.veracode.io/elearning/v1/', endpoint)
 
